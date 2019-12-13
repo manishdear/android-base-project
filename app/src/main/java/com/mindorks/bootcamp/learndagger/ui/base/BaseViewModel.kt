@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.mindorks.bootcamp.learndagger.utils.NetworkHelper
 import io.reactivex.disposables.CompositeDisposable
 
-abstract class BaseViewModel(
+abstract class  BaseViewModel(
         protected val compositeDisposable: CompositeDisposable,
         protected val networkHelper: NetworkHelper
 ) : ViewModel() {

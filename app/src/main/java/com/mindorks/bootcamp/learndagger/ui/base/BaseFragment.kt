@@ -21,29 +21,15 @@ abstract class BaseFragment<VM: BaseViewModel> : Fragment() {
     @Inject
     lateinit var viewModel: VM
 
-    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         injectDependencies(buildFragmentComponent())
-        super.onCreateContextMenu(menu, v, menuInfo)
-        setupObserver()
+        super.onCreate(savedInstanceState)
+        setupObservers()
         viewModel.onCreate()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(provideLayoutId(), container , false)
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupView(view)
-    }
-
-    protected open fun setupObserver(){
-        viewModel.messageStringId.observe(this, Observer {
-            showMessage(it)
-        })
-
-        viewModel.messageString.observe(this, Observer {
-            showMessage(it)
-        })
     }
 
     private fun buildFragmentComponent() =
@@ -53,6 +39,24 @@ abstract class BaseFragment<VM: BaseViewModel> : Fragment() {
                     .fragmentModule(FragmentModule(this))
                     .build()
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(provideLayoutId(), container , false)
+
+    protected open fun setupObservers(){
+        viewModel.messageStringId.observe(this, Observer {
+            showMessage(it)
+        })
+
+        viewModel.messageString.observe(this, Observer {
+            showMessage(it)
+        })
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupView(view)
+    }
+
     fun showMessage(message: String) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
     fun showMessage(@StringRes resId: Int) = showMessage(getString(resId))
@@ -60,7 +64,7 @@ abstract class BaseFragment<VM: BaseViewModel> : Fragment() {
     @LayoutRes
     protected abstract fun provideLayoutId(): Int
 
-    protected abstract fun setupView(view: View)
-
     protected abstract fun injectDependencies(fragmentComponent: FragmentComponent)
+
+    protected abstract fun setupView(view: View)
 }

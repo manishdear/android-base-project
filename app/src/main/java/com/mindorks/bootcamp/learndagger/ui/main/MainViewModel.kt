@@ -15,8 +15,8 @@ class MainViewModel(
         compositeDisposable: CompositeDisposable,
         networkHelper: NetworkHelper,
         private val databaseService: DatabaseService,
-        private val networkService: NetworkService) :
-        BaseViewModel(compositeDisposable, networkHelper){
+        private val networkService: NetworkService)
+    : BaseViewModel(compositeDisposable, networkHelper){
 
     val data = MutableLiveData<String>()
 
